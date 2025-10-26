@@ -1,0 +1,15 @@
+{
+  "short_name": "SMM+AI",
+  "name": "SMM+AI - Smart Social Media Management",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "theme_color": "#000000"
+}

@@ -1,0 +1,38 @@
+# infrastructure/kubernetes/backend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smmplusai-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: smmplusai-backend
+  template:
+    metadata:
+      labels:
+        app: smmplusai-backend
+    spec:
+      containers:
+        - name: backend
+          image: smmplusai-backend:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: MONGODB_URI
+              value: "mongodb://mongodb:27017/smmplusai"
+            - name: JWT_SECRET
+              value: "your_jwt_secret_here"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: smmplusai-backend-service
+spec:
+  selector:
+    app: smmplusai-backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: ClusterIP

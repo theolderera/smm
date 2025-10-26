@@ -1,0 +1,38 @@
+# infrastructure/kubernetes/ai-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smmplusai-ai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: smmplusai-ai
+  template:
+    metadata:
+      labels:
+        app: smmplusai-ai
+    spec:
+      containers:
+        - name: ai
+          image: smmplusai-ai:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: MONGODB_URI
+              value: "mongodb://mongodb:27017/smmplusai"
+            - name: AI_API_KEY
+              value: "your_ai_api_key_here"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: smmplusai-ai-service
+spec:
+  selector:
+    app: smmplusai-ai
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP

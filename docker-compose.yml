@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: smmplusai-mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db
+      - ./database/init:/docker-entrypoint-initdb.d
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=smmplusai
+    networks:
+      - smmplusai-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smmplusai-backend
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://mongodb:27017/smmplusai
+      - JWT_SECRET=${JWT_SECRET}
+      - GPT_API_KEY=${GPT_API_KEY}
+      - MIDJOURNEY_API_KEY=${MIDJOURNEY_API_KEY}
+      - SOCIAL_API_KEYS=${SOCIAL_API_KEYS}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - smmplusai-network
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  ai-modules:
+    build:
+      context: ./ai-modules
+      dockerfile: Dockerfile
+    container_name: smmplusai-ai
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GPT_API_KEY=${GPT_API_KEY}
+      - MIDJOURNEY_API_KEY=${MIDJOURNEY_API_KEY}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+    depends_on:
+      - backend
+    networks:
+      - smmplusai-network
+    healthcheck:
+      test: ['CMD', 'python', '--version']
+      interval: 20s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  mongodb_data:
+    name: smmplusai-mongodb-data
+
+networks:
+  smmplusai-network:
+    driver: bridge

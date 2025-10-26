@@ -1,0 +1,12 @@
+{
+  "name": "smmplusai-backend",
+  "version": "1.0.0",
+  "description": "Backend for SMM+AI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {},
+  "author": "",
+  "license": "MIT"
+}

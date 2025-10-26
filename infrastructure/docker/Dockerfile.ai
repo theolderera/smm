@@ -1,0 +1,8 @@
+# infrastructure/docker/Dockerfile.ai
+FROM python:3.9-slim
+
+WORKDIR /app
+COPY ai-modules/requirements.txt .
+RUN pip install -r requirements.txt
+COPY ai-modules .
+CMD ["python", "main.py"]

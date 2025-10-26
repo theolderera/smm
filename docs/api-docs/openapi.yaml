@@ -1,0 +1,101 @@
+# docs/api-docs/openapi.yaml
+openapi: 3.0.3
+info:
+  title: SMM+AI API
+  version: 1.0.0
+  description: API for SMM+AI platform
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /user/onboarding:
+    post:
+      summary: Setup user onboarding
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                businessName: { type: string }
+                goals: { type: array, items: { type: string } }
+                audience: { type: array, items: { type: string } }
+      responses:
+        '200': { description: Success }
+        '500': { description: Server error }
+  /user/profile:
+    get:
+      summary: Get user profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200': { description: User profile }
+        '401': { description: Unauthorized }
+  /branding/generate:
+    post:
+      summary: Generate branding options
+      security:
+        - BearerAuth: []
+      responses:
+        '200': { description: Branding options }
+        '500': { description: Server error }
+  /branding/select:
+    post:
+      summary: Select branding
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200': { description: Selected branding }
+        '500': { description: Server error }
+  /strategy/generate:
+    post:
+      summary: Generate strategy
+      security:
+        - BearerAuth: []
+      responses:
+        '200': { description: Strategy data }
+        '500': { description: Server error }
+  /strategy/confirm:
+    post:
+      summary: Confirm strategy
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200': { description: Confirmed strategy }
+        '500': { description: Server error }
+  /analytics/dashboard:
+    get:
+      summary: Get dashboard data
+      security:
+        - BearerAuth: []
+      responses:
+        '200': { description: Dashboard data }
+        '500': { description: Server error }
+  /academy/courses:
+    get:
+      summary: Get academy courses
+      security:
+        - BearerAuth: []
+      responses:
+        '200': { description: Course list }
+        '500': { description: Server error }
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

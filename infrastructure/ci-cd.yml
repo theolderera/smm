@@ -1,0 +1,45 @@
+# infrastructure/ci-cd.yml
+name: SMM+AI CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install Frontend Dependencies
+        run: cd frontend/mobile && npm install
+      - name: Test Frontend
+        run: cd frontend/mobile && npm test
+      - name: Install Backend Dependencies
+        run: cd backend && npm install
+      - name: Test Backend
+        run: cd backend && npm test
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install AI Dependencies
+        run: cd ai-modules && pip install -r requirements.txt
+      - name: Test AI
+        run: cd ai-modules && pytest
+      - name: Build Docker Images
+        run: |
+          docker build -t smmplusai-frontend ./frontend/mobile
+          docker build -t smmplusai-backend ./backend
+          docker build -t smmplusai-ai ./ai-modules
+      - name: Push Docker Images
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push smmplusai-frontend
+          docker push smmplusai-backend
+          docker push smmplusai-ai

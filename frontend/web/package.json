@@ -1,0 +1,46 @@
+{
+  "name": "smmplusai-web",
+  "version": "1.0.0",
+  "description": "Web app for SMM+AI: AI-driven SMM automation and business consulting",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "jest --coverage",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.2.7",
+    "axios": "^1.7.2",
+    "i18next": "^23.12.2",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "i18next-http-backend": "^3.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-i18next": "^15.0.1",
+    "react-redux": "^9.1.0",
+    "react-router-dom": "^6.22.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-react": "^7.24.0",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.34.1",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5",
+    "vite": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "author": "SMM+AI Team <info@smmplusai.ai>",
+  "license": "MIT"
+}
